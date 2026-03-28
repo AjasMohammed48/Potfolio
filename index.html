@@ -125,6 +125,62 @@
       color: rgba(200,82,42,0.04);
       pointer-events: none; z-index: 0;
       line-height: 1;
+      animation: bgTextPulse 8s ease-in-out infinite;
+    }
+    @keyframes bgTextPulse {
+      0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+      50% { opacity: 0.5; transform: translateY(-52%) scale(1.02); }
+    }
+
+    /* Animated background blobs */
+    .bg-blobs {
+      position: fixed; inset: 0; z-index: -1; overflow: hidden;
+      pointer-events: none;
+    }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.07;
+    }
+    .blob-1 {
+      width: 600px; height: 600px;
+      background: var(--accent);
+      top: -200px; left: -200px;
+      animation: blobMove1 18s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 500px; height: 500px;
+      background: var(--gold);
+      bottom: -150px; right: -150px;
+      animation: blobMove2 22s ease-in-out infinite;
+    }
+    .blob-3 {
+      width: 400px; height: 400px;
+      background: var(--accent2);
+      top: 50%; left: 50%;
+      animation: blobMove3 15s ease-in-out infinite;
+    }
+    @keyframes blobMove1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(100px, 80px) scale(1.1); }
+      66% { transform: translate(40px, -60px) scale(0.9); }
+    }
+    @keyframes blobMove2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-80px, -100px) scale(1.15); }
+      66% { transform: translate(-30px, 50px) scale(0.85); }
+    }
+    @keyframes blobMove3 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.3); }
+    }
+    /* Floating particles */
+    .particles {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+    }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: var(--accent); opacity: 0;
+      animation: particleFloat linear infinite;
     }
 
     .hero-left { position: relative; z-index: 1; }
@@ -206,6 +262,12 @@
       position: relative; width: 100%;
       aspect-ratio: 4/5; border-radius: 28px; overflow: hidden;
       box-shadow: 0 40px 80px var(--shadow), 0 0 0 1px var(--border);
+      animation: floatPhoto 5s ease-in-out infinite;
+    }
+    @keyframes floatPhoto {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-12px) rotate(0.5deg); }
+      66% { transform: translateY(-6px) rotate(-0.3deg); }
     }
     .photo-wrap img {
       width: 100%; height: 100%;
@@ -571,12 +633,27 @@
       .stats-row { grid-template-columns: 1fr 1fr; }
     }
 
+    @keyframes particleFloat {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 0.4; }
+      90% { opacity: 0.2; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: rgba(200,82,42,0.3); border-radius: 3px; }
   </style>
 </head>
 <body>
+
+<!-- Animated Background -->
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+<div class="particles" id="particles"></div>
 
 <!-- Cursor -->
 <div class="cursor" id="cursor"></div>
@@ -607,9 +684,9 @@
       Ajas
       <span class="last">Mohammed</span>
     </h1>
-    <p class="hero-title">AI & ML Engineer · Patent Holder · MCA (AI &amp; ML)</p>
+    <p class="hero-title">Aspiring Data Scientist · MCA (AI &amp; ML)</p>
     <p class="hero-desc">
-      Building physics-informed intelligence systems, NLP pipelines, and computer vision tools. Passionate about turning data into decisions and models into real-world impact.
+      AI/ML | Data Science | Data Analytics | Python | NLP | SQL | Excel | IBM Cognos — passionate about turning data into decisions and models into real-world impact.
     </p>
     <div class="hero-actions">
       <a href="https://github.com/AjasMohammed48" target="_blank" class="btn-primary">
@@ -1002,6 +1079,21 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   revealEls.forEach(el => revealObs.observe(el));
+
+  // Generate particles
+  const particlesContainer = document.getElementById('particles');
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${Math.random() * 20 + 15}s;
+      animation-delay: ${Math.random() * 20}s;
+    `;
+    particlesContainer.appendChild(p);
+  }
 
   // Fallback: if nothing revealed after 1s, show everything
   setTimeout(() => {
