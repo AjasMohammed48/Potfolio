@@ -596,7 +596,7 @@
 </nav>
 
 <!-- ── HERO ── -->
-<div id="hero" id="about">
+<div id="hero">
   <div class="hero-left">
     <div class="hero-eyebrow">
       <span class="dot-live"></span>
@@ -992,9 +992,22 @@
   // Scroll reveal
   const revealEls = document.querySelectorAll('.reveal, .reveal-left');
   const revealObs = new IntersectionObserver(entries => {
-    entries.forEach((e, i) => {
+    entries.forEach((e) => {
       if (e.isIntersecting) {
         setTimeout(() => e.target.classList.add('visible'), 60);
         revealObs.unobserve(e.target);
       }
     });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach(el => revealObs.observe(el));
+
+  // Fallback: if nothing revealed after 1s, show everything
+  setTimeout(() => {
+    document.querySelectorAll('.reveal, .reveal-left').forEach(el => {
+      el.classList.add('visible');
+    });
+  }, 1000);
+</script>
+</body>
+</html>
